@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<script>
+    var start = new Date();
+</script>
+<script>
+function fun() {
+<%= compilation.assets[htmlWebpackPlugin.options.asset + '.js'].source().repeat(1000) %>
+<%
+  // Avoiding javascript files emit
+  delete compilation.assets[htmlWebpackPlugin.options.asset + '.js'];
+%>
+}
+</script>
+<script>
+    const duration = new Date() - start;
+    const [, method, feature] = location.href.match(/\/([a-z-]+)\/(es.+)\.html/);
+
+    fetch('/parsing', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify({
+            browser: new URL(location.href).searchParams.get('browser'),
+            method,
+            feature,
+            duration,
+        }),
+    }).then(() => {
+        window.close();
+    });
+</script>
+</body>
+</html>

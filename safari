@@ -1,0 +1,54 @@
+#!/usr/bin/osascript
+
+on run args
+    
+    if args is {} then return ¬
+        "Missing Arguments!..." & linefeed & ¬
+        "Examples:" & linefeed & ¬
+        "safari https://www.example.com" & linefeed & ¬
+        "safari -private" & linefeed & ¬
+        "safari -private https://www.example.com"       
+    
+    set newPrivateWindow to false
+    
+    if item 1 of args contains "-private" then
+        set newPrivateWindow to true
+        if (length of args) is not greater than 1 then
+            set theURL to missing value
+        else
+            set theURL to item 2 of args
+        end
+    else
+        set the theURL to item 1 of args
+    end if
+    
+    tell application "Safari" to activate
+    delay 1
+    
+    if newPrivateWindow then
+        tell application "System Events" to ¬
+            keystroke "n" using ¬
+                {shift down, command down}
+        delay 1
+        openURL(theURL)
+    else
+        tell application "System Events" to ¬
+            keystroke "n" using ¬
+                {command down}
+        delay 1
+        openURL(theURL)
+    end if
+    
+end run
+
+on openURL(theURL)
+    if theURL is missing value then
+        return
+    else
+        tell application "Safari" to ¬
+            set URL of ¬
+                current tab of ¬
+                front window to ¬
+                theURL as string
+    end if
+end openURL

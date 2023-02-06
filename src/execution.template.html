@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<script>
+<%= compilation.assets[htmlWebpackPlugin.options.asset + '.js'].source() %>
+<%
+  // Avoiding javascript files emit
+  delete compilation.assets[htmlWebpackPlugin.options.asset + '.js'];
+%>
+</script>
+</body>
+</html>

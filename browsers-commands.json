@@ -1,0 +1,6 @@
+{
+  "Safari": "./safari -private",
+  "Firefox": "open -na \"Firefox\" --args -private-window",
+  "Chrome": "open -na \"Google Chrome\" --args --incognito",
+  "Opera": "open -na \"Opera\" --args --incognito"
+}
