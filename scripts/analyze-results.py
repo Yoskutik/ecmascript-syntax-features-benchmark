@@ -8,24 +8,6 @@ import shutil
 from tqdm import tqdm
 
 
-def define_box_properties(plot_name, color_code, label):
-  for k, v in plot_name.items():
-    plt.setp(plot_name.get(k), color=color_code)
-
-  plt.plot([], c=color_code, label=label)
-  plt.legend(fontsize=12)
-
-
-def create_box(values, offset):
-  width = 0.15
-  return plt.boxplot(
-    values,
-    vert=False,
-    positions=(x - offset*width/2*1.25),
-    widths=width
-  )
-
-
 parser = argparse.ArgumentParser(description = 'Benchmark plots generator')
 parser.add_argument('-m', '--mode', choices=['execution', 'parsing', 'both'], required=True)
 args = parser.parse_args()
@@ -35,8 +17,9 @@ if args.mode == 'both':
 else:
   sources = [args.mode]
 
-with open(f'browsers-commands.json') as f:
-    browsers = list(json.load(f).keys())
+with open(f'commands.json') as f:
+  system = 'darwin' if platform.uname().system == 'Darwin' else 'win32'
+  browsers = list(json.load(f)[system]['start'].keys())
 
 uname = platform.uname()
 results_dir = f'results_{uname.system}-{uname.machine}'
@@ -48,46 +31,24 @@ shutil.copytree('results', results_dir)
 
 x = np.flip(np.arange(len(browsers)))
 
+methods = [
+  ['Modern', '#d3242b', 3],
+  ['TypeScript Legacy', '#1c74b3', 1],
+  ['Babel Legacy', '#fa7c0d', -1],
+  ['SWC Legacy', '#2ca42c', -3],
+]
+
 for benchmark in sources:
   print(f'Starting analyzing {benchmark} results')
 
-  def bar(feature, babel_values, swc_values, ts_values, modern_values):
-    width = 0.15
+  with open(f'{results_dir}/{benchmark}/results.json') as f:
+    data = json.load(f)
 
-    fig, ax = plt.subplots(figsize=[15, 5])
-    ax.barh(x - 3*width/2*1.25, ts_values, width, label='TypeScript Legacy')
-    ax.barh(x - width/2*1.25, babel_values, width, label='Babel Legacy')
-    ax.barh(x + width/2*1.25, swc_values, width, label='SWC Legacy')
-    ax.barh(x + 3*width/2*1.25, modern_values, width, label='Modern')
 
-    ax.set_title(feature, { 'fontsize': 16 }, pad=15)
-    ax.set_yticks(x, browsers, fontsize=12)
-    ax.set_xticks([])
-    ax.legend(fontsize=12)
-    ax.set_xlabel(
-      'Frequency of operations per second' if benchmark == 'execution' else 'JavaScript parsing speed',
-      fontsize=12
-    )
+  def create_plot(fn, figsize, folder_name, feature, values):
+    plt.figure(figsize=figsize)
 
-    fig.tight_layout()
-
-    directory = feature.split('/')[0]
-    os.makedirs(f'{results_dir}/{benchmark}/plots/bars/{directory}', exist_ok=True)
-    plt.savefig(f'{results_dir}/{benchmark}/plots/bars/{feature}.png')
-    plt.close()
-
-  def box(feature, babel_values, swc_values, ts_values, modern_values):
-    plt.figure(figsize=[15, 8])
-
-    ts_plot = create_box(ts_values, -3)
-    babel_plot = create_box(babel_values, -1)
-    swc_plot = create_box(swc_values, 1)
-    modern_plot = create_box(modern_values, 3)
-
-    define_box_properties(modern_plot, '#d3242b', 'Modern')
-    define_box_properties(swc_plot, '#2ca42c', 'SWC')
-    define_box_properties(babel_plot, '#fa7c0d', 'Babel')
-    define_box_properties(ts_plot, '#1c74b3', 'TypeScript')
+    fn(values, 0.15)
 
     plt.title(feature, { 'fontsize': 16 }, pad=15)
     plt.yticks(x, browsers, fontsize=12)
@@ -97,58 +58,69 @@ for benchmark in sources:
       fontsize=12
     )
 
-    plt.tight_layout()
+    plt.legend(
+      [plt.Rectangle((0, 0), 1, 1, fc=x[1]) for x in methods],
+      [x[0] for x in methods],
+      fontsize=12
+    )
 
+    plt.tight_layout()
     directory = feature.split('/')[0]
-    os.makedirs(f'{results_dir}/{benchmark}/plots/boxes/{directory}', exist_ok=True)
-    plt.savefig(f'{results_dir}/{benchmark}/plots/boxes/{feature}.png')
+    os.makedirs(f'{results_dir}/{benchmark}/plots/{folder_name}/{directory}', exist_ok=True)
+    plt.savefig(f'{results_dir}/{benchmark}/plots/{folder_name}/{feature}.png')
     plt.close()
 
 
-  with open(f'{results_dir}/{benchmark}/results.json') as f:
-    data = json.load(f)
+  def bar(values, width):
+    for label, color, pos in methods:
+      plt.barh(x + pos*width/2*1.25, values[label], width, color=color)
+
+
+  def box(values, width):
+    for label, color, pos in methods:
+      plot_name = plt.boxplot(
+        values[label],
+        vert=False,
+        positions=(x + pos*width/2*1.25),
+        widths=width,
+        showfliers=False,
+      )
+
+      for k, v in plot_name.items():
+        plt.setp(plot_name.get(k), color=color)
+
+
+  def create_values(fn):
+    values = {
+      'TypeScript Legacy': [],
+      'SWC Legacy': [],
+      'Babel Legacy': [],
+      'Modern': [],
+    }
+
+    for browser in browsers:
+      for key in values.keys():
+        try:
+          method = key.lower().replace(' ', '-')
+          value = fn(data[feature][browser][method])
+          values[key].append(value)
+        except:
+          values[key].append(0)
+
+    return values
+
 
   description = f'{benchmark.capitalize()}: Bar plots'
   for feature in tqdm(data.keys(), desc=description):
-    babel_values = []
-    swc_values = []
-    ts_values = []
-    modern_values = []
+    values = create_values(lambda x: 1 / np.quantile(x, 0.25))
+    create_plot(bar, [15, 5], 'bars', feature, values)
 
-    for browser in browsers:
-      def try_get(method):
-        try:
-          return 1 / np.quantile(data[feature][browser][method], 0.25)
-        except:
-          return 0
-
-      babel_values.append(try_get('babel-legacy'))
-      swc_values.append(try_get('swc-legacy'))
-      ts_values.append(try_get('typescript-legacy'))
-      modern_values.append(try_get('modern'))
-
-    bar(feature, babel_values, swc_values, ts_values, modern_values)
 
   description = f'{benchmark.capitalize()}: Box plots'
   for feature in tqdm(data.keys(), desc=description):
-    babel_values = []
-    swc_values = []
-    ts_values = []
-    modern_values = []
+    values = create_values(lambda x: 1 / np.array(x))
+    create_plot(box, [15, 7], 'boxes', feature, values)
 
-    for browser in browsers:
-      def try_get(method):
-        try:
-          return 1 / np.array(data[feature][browser][method])
-        except:
-          return 0
-
-      babel_values.append(try_get('babel-legacy'))
-      swc_values.append(try_get('swc-legacy'))
-      ts_values.append(try_get('typescript-legacy'))
-      modern_values.append(try_get('modern'))
-
-    box(feature, babel_values, swc_values, ts_values, modern_values)
 
   description = f'{benchmark.capitalize()}: Browser detailed plots'
   for browser in tqdm(browsers, desc=description):
@@ -182,6 +154,7 @@ for benchmark in sources:
     os.makedirs(f'{results_dir}/{benchmark}/detailed-per-browser', exist_ok=True)
     plt.savefig(f'{results_dir}/{benchmark}/detailed-per-browser/{browser}.png')
     plt.close()
+
 
   with open(f'{results_dir}/{benchmark}.md', 'w') as f:
     f.write('# EcmaScript Syntax Features Benchmark\n')

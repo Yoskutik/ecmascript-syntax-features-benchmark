@@ -1,3 +1,0 @@
-{
-  "Safari": "osascript -e 'tell application \"Safari\" to quit'"
-}

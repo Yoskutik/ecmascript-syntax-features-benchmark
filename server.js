@@ -5,9 +5,8 @@ const path = require('path');
 const { exec, execSync } = require('child_process');
 const { SingleBar } = require('cli-progress');
 const { ArgumentParser } = require('argparse');
-const browserCommands = require('./browsers-commands.json');
-const browserKillCommands = require('./browsers-kill-commands.json');
 const { version } = require('./package.json');
+const commands = require('./commands.json')[process.platform];
 
 const parser = new ArgumentParser({
   description: 'EcmaScript Syntax Features Benchmark',
@@ -27,13 +26,33 @@ parser.add_argument('-p', '--port', {
   default: 8080,
   type: Number,
 });
+parser.add_argument('--update', {
+  choices: ['typescript-legacy', 'swc-legacy', 'babel-legacy', 'modern'],
+  help: 'methods to update in already generated results.json file',
+  action: 'append',
+});
 
 const args = parser.parse_args();
 
-const files = glob.sync(`./build/${args.mode}/*/*/*.html`).map(it => it.replace(/^\.\/build/, ''));
 const maxTestPasses = args.mode === 'execution' ? 1 : 25;
-const browsers = Object.keys(browserCommands);
-const data = {};
+const browsers = Object.keys(commands.start);
+
+let files = glob.sync(`./build/${args.mode}/*/*/*.html`).map(it => it.replace(/^\.\/build/, ''));
+let data = {};
+
+if (args.update) {
+  data = fse.readJsonSync(`results/${args.mode}/results.json`);
+
+  Object.keys(data).forEach(feature => {
+    Object.keys(data[feature]).forEach(browsers => {
+      args.update.forEach(method => {
+        data[feature][browsers][method] = [];
+      });
+    });
+  });
+
+  files = files.filter(file => args.update.some(method => file.includes(method)));
+}
 
 let browsersIndex = 0;
 let fileIndex = 0;
@@ -44,7 +63,7 @@ let runBrowserTimeout;
 const runBrowser = () => {
   const file = files[fileIndex];
   const browser = browsers[browsersIndex];
-  const command = browserCommands[browser];
+  const command = commands.start[browser];
 
   clearTimeout(runBrowserTimeout);
   exec(`${command} "http://localhost:${args.port}${file}?browser=${browser}"`);
@@ -89,24 +108,16 @@ const app = express();
 app.use(express.json());
 app.use(express.static('build'));
 
-app.use((req, res, next) => {
-  const { browser, feature, method } = req.body;
-
-  if (feature && browser && method) {
-    data[feature] ||= {};
-    data[feature][browser] ||= {};
-    data[feature][browser][method] ||= [];
-  }
-
-  next();
-})
-
 app.post(`/${args.mode}`, (req, res) => {
   const { browser, feature, method, results, duration } = req.body;
+
+  data[feature] ||= {};
+  data[feature][browser] ||= {};
 
   if (args.mode === 'execution') {
     data[feature][browser][method] = results;
   } else {
+    data[feature][browser][method] ||= [];
     data[feature][browser][method].push(duration);
   }
 
@@ -114,8 +125,8 @@ app.post(`/${args.mode}`, (req, res) => {
 
   res.sendStatus(200);
 
-  if (browserKillCommands[browser]) {
-    execSync(browserKillCommands[browser]);
+  if (commands.kill?.[browser]) {
+    execSync(commands.kill[browser]);
   }
 
   makeIteration();
