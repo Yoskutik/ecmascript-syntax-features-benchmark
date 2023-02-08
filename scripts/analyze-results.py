@@ -72,8 +72,24 @@ for benchmark in sources:
 
 
   def bar(values, width):
-    for label, color, pos in methods:
-      plt.barh(x + pos*width/2*1.25, values[label], width, color=color)
+    methods_order = [x[0] for x in methods]
+    barhs = []
+    barh_values = []
+
+    for i, (label, color, pos) in enumerate(methods):
+      barh = plt.barh(x + pos*width/2*1.25, values[label], width, color=color)
+      all_values = [values[x][i] for x in methods_order]
+      barhs.append(barh)
+      barh_values.append(all_values)
+
+    for i, barh in enumerate(barhs):
+      min_value = min(barh_values[i])
+      max_value = max(barh_values[i])
+      plt.bar_label(
+        barh,
+        labels=[f'x{barh_values[x][i] / max(barh_values[x]):.2f}' for x in range(4)],
+        padding=5,
+      )
 
 
   def box(values, width):
@@ -152,6 +168,7 @@ for benchmark in sources:
       current_plot = int(np.ceil(current_plot / 3) * 3)
 
     os.makedirs(f'{results_dir}/{benchmark}/detailed-per-browser', exist_ok=True)
+    plt.tight_layout()
     plt.savefig(f'{results_dir}/{benchmark}/detailed-per-browser/{browser}.png')
     plt.close()
 
