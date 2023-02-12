@@ -4,8 +4,8 @@
   "description": "EcmaScript Syntax Features Benchmark for several browsers and several compile tools",
   "scripts": {
     "clear:parsing": "node scripts/clear-parsing.js",
-    "build:execution": "rimraf dist/execution && webpack -c configs/execution.config.js",
-    "build:parsing": "rimraf dist/parsing && node scripts/build-parsing.js",
+    "build:execution": "rimraf build/execution && webpack -c configs/execution.config.js",
+    "build:parsing": "rimraf build/parsing && node scripts/build-parsing.js",
     "build": "rimraf dist && npm run build:execution && npm run build:parsing",
     "start:execution": "node server.js -m execution",
     "start:parsing": "node server.js -m parsing",
