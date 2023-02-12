@@ -7,21 +7,23 @@ declare global {
 }
 
 const TEST_ITERATIONS_NUMBER = 25;
-const TEST_DELAY_BETWEEN_ITERATIONS = 500;
+
+const params = new URLSearchParams(location.search);
+const delay_between_iterations = +(params.get('delay') || 250);
 
 const endUpRun = (
   statedAt: Date,
   results: number[],
   iteration: number,
   runSingle: () => void,
-  onTestEnd?: () => void,
+  init?: (i: number) => void,
 ) => {
   const diff = new Date().getTime() - statedAt.getTime();
   results.push(diff);
-  onTestEnd && onTestEnd();
+  init && init(iteration);
 
   if (iteration < TEST_ITERATIONS_NUMBER) {
-    setTimeout(runSingle, TEST_DELAY_BETWEEN_ITERATIONS);
+    setTimeout(runSingle, delay_between_iterations);
   } else {
     const [, method, feature] = location.href.match(/\/([a-z-]+)\/(es.+)\.html/);
 
@@ -31,7 +33,7 @@ const endUpRun = (
         'Content-Type': 'application/json;charset=UTF-8',
       },
       body: JSON.stringify({
-        browser: new URL(location.href).searchParams.get('browser'),
+        browser: params.get('browser'),
         method,
         results,
         feature,
@@ -42,32 +44,32 @@ const endUpRun = (
   }
 };
 
-export const run = (n: number, cb: (i: number) => void, onTestEnd?: () => void) => {
+export const run = (n: number, cb: (i: number, k: number) => void, init?: (i: number) => void) => {
   if (BUILD_TYPE === 'parsing') {
-    cb(0);
-    cb(1);
+    cb(0, 0);
+    cb(1, 1);
     return;
   }
 
   const results = [];
 
   let k = 0;
+  init && init(k);
   const runSingle = () => {
     k++;
 
     const now = new Date();
-    console.time('Done');
     for (let i = 0; i < n; i++) {
-      cb(i);
+      cb(i, k);
     }
-    console.timeEnd('Done');
-    endUpRun(now, results, k, runSingle, onTestEnd);
+    window.__testValue = window.__testValue;
+    endUpRun(now, results, k, runSingle, init);
   };
 
-  setTimeout(runSingle, TEST_DELAY_BETWEEN_ITERATIONS);
+  setTimeout(runSingle, delay_between_iterations);
 };
 
-export const runAsync = (n: number, cb: (i: number) => Promise<void>, onTestEnd?: () => void) => {
+export const runAsync = (n: number, cb: (i: number) => Promise<void>, init?: (i: number) => void) => {
   if (BUILD_TYPE === 'parsing') {
     cb(0);
     cb(1);
@@ -77,6 +79,7 @@ export const runAsync = (n: number, cb: (i: number) => Promise<void>, onTestEnd?
   const results = [];
 
   let k = 0;
+  init && init(k);
   const runSingle = () => {
     k++;
     const now = new Date();
@@ -84,9 +87,9 @@ export const runAsync = (n: number, cb: (i: number) => Promise<void>, onTestEnd?
     Promise
       .all(Array(n).fill(null).map((_, i) => cb(i)))
       .then(() => {
-        endUpRun(now, results, k, runSingle, onTestEnd);
+        endUpRun(now, results, k, runSingle, init);
       });
   };
 
-  setTimeout(runSingle, TEST_DELAY_BETWEEN_ITERATIONS);
+  setTimeout(runSingle, delay_between_iterations);
 };

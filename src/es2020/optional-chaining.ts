@@ -1,6 +1,6 @@
 import { run } from '../helpers';
 
-const obj = {} as any;
+let obj: any;
 
 run(
   50_000_000,
@@ -17,4 +17,13 @@ run(
       ?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a
       ?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a
   },
+  function () {
+    obj = {};
+
+    let currentObj = obj;
+    Array(300).fill(null).forEach(() => {
+      currentObj.a = {};
+      currentObj = obj.a;
+    });
+  }
 );

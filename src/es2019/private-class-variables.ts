@@ -1,23 +1,28 @@
 import { run } from '../helpers';
 
-class Class {
-  // @ts-ignore
-  #a = 'a';
-
-  // @ts-ignore
-  #b = 'b';
-
-  // @ts-ignore
-  #c = this.#a + this.#b;
-
-  constructor() {
-    window.__testValue = this.#c;
-  }
-}
+let classes;
 
 run(
   1_000_000,
+  function (i) {
+    new classes[i % classes.length]();
+  },
   function () {
-    new Class();
+    classes = Array(10_000).fill(null).map(() => (
+      class {
+        // @ts-ignore
+        #a = 'a';
+
+        // @ts-ignore
+        #b = 'b';
+
+        // @ts-ignore
+        #c = this.#a + this.#b;
+
+        constructor() {
+          window.__testValue = this.#c;
+        }
+      }
+    ))
   },
 );

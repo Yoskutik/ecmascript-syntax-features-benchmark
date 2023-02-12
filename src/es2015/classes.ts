@@ -1,48 +1,49 @@
 import { run } from '../helpers';
 
-class Class1 {
-  constructor() {
-    window.__testValue = 'Class1';
-  }
-
-  method1() {
-    window.__testValue = 'method1';
-  }
-}
-
-class Class2 extends Class1 {
-  constructor() {
-    super();
-    window.__testValue = 'Class2';
-  }
-
-  method2() {
-    super.method1();
-  }
-}
-
-class Class3 extends Class2 {
-  constructor() {
-    super();
-    window.__testValue = 'Class3';
-  }
-
-  method3() {
-    super.method2();
-    window.__testValue = 'method3';
-  }
-}
-
-class Class4 extends Class3 {
-  constructor() {
-    super();
-    window.__testValue = 'Class4';
-  }
-}
+let level0Classes;
+let level1Classes;
+let level2Classes;
 
 run(
   1_000_000,
-  function () {
-    new Class4().method3();
+  function (i) {
+    var Class: any = level2Classes[i % level2Classes.length];
+    new Class().method2();
+  },
+  function (k) {
+    level0Classes = Array(10_000).fill(null).map((_, i) => (
+      class {
+        constructor() {
+          window.__testValue = 'class0'.concat(i.toString()).concat(k.toString());
+        }
+
+        method0() {
+          window.__testValue = 'method0'.concat(i.toString()).concat(k.toString());
+        }
+      }
+    ));
+
+    level1Classes = Array(10_000).fill(null).map((_, i) => (
+      class extends level0Classes[i] {
+        constructor() {
+          super();
+          window.__testValue = 'class1'.concat(i.toString()).concat(k.toString());
+        }
+      }
+    ));
+
+    level2Classes = Array(10_000).fill(null).map((_, i) => (
+      class extends level1Classes[i] {
+        constructor() {
+          super();
+          window.__testValue = 'class2'.concat(i.toString()).concat(k.toString());
+        }
+
+        method2() {
+          window.__testValue = 'method2'.concat(i.toString()).concat(k.toString());
+          this.method0();
+        }
+      }
+    ));
   }
 );

@@ -32,12 +32,20 @@ _In the execution mode_ the browser opens ones in a private (aka
 incognito) mode for **each feature**. Every iteration of the test runs
 in the same page for 25 times and measures how long it took (in
 milliseconds). After 25 iterations all results are sent to the
-server.
+server. There's also a delay between iterations.
 
-_In the execution mode_ the browser opens ones in a private mode
+_In the parsing mode_ the browser opens ones in a private mode
 for **each feature and each iteration**. Every iteration measures
 how long it took and sends the result to server. The server is
-responsible to join these results into an array.
+responsible to join these results into an array. There's also a
+delay between iterations.
+
+Features that was tested:
+* ES2015:
+  * Arrow Functions - test for how fast a function can be
+  declared (es2015/arrow-functions-declaration) and used
+  (es2015/arrow-functions-usage)
+  * Classes - 
 
 
 ### Data processing
@@ -95,19 +103,20 @@ that speed measurements vary in browsers.
 
 #### Execution mode 
 
-|                             | Modern | TypeScript | SWC   | Babel |
-|-----------------------------|--------|------------|-------|-------|
-| es2015/arrow-function-usage | **S**  |            |       |       |
-| es2015/classes              |        | **F**      | **S** | **S** |
-| es2015/default-parameters   | **S**  | **F**      |       |       |
-| es2015/for-of-iterators     |        | **F**      |       | **S** |
-| es2015/rest-parameters      | **F**  | **S**      |       |       |
-| es2015/spread-operator      |        | **F**      | **S** | **S** |
-| es2015/template-literals    | **F**  |            |       |       |
-| es2016/template-literals    | **S**  |            |       |       |
-| es2017/async-functions      | **F**  | **S**      |       |       |
-| es2018/async-functions      | **F**  | **S**      |       |       |
-| es2020/optional-chaining    | **F**  |            |       |       |
+|                           | Modern | TypeScript | SWC    | Babel  |
+|---------------------------|--------|------------|--------|--------|
+| es2015/arrow-functions    | **ES** |            |        |        |
+| es2015/classes            |        |            | **ES** | **ES** |
+| es2015/default-parameters | **ES** | **EF**     |        |        |
+| es2015/for-of-iterators   |        | **EF**     |        | **ES** |
+| es2015/generators         |        |            |        |        |
+| es2015/rest-parameters    | **EF** | **ES**     |        |        |
+| es2015/spread-operator    |        | **EF**     | **ES** | **ES** |
+| es2015/template-literals  | **EF** |            |        |        |
+| es2016/template-literals  | **ES** |            |        |        |
+| es2017/async-functions    | **EF** | **ES**     |        |        |
+| es2018/async-functions    | **EF** | **ES**     |        |        |
+| es2020/optional-chaining  | **EF** |            |        |        |
 
 Results for `es2015/arrow-function-declaration`, `es2015/for-of-iterators`
 and `es2018/private-class-variables` are vary.

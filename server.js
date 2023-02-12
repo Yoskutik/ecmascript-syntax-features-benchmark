@@ -26,8 +26,16 @@ parser.add_argument('-p', '--port', {
   default: 8080,
   type: Number,
 });
-parser.add_argument('--update', {
-  choices: ['typescript-legacy', 'swc-legacy', 'babel-legacy', 'modern'],
+parser.add_argument('-d', '--delay', {
+  help: 'delay between test iterations',
+  default: 250,
+  type: Number,
+});
+parser.add_argument('--update-method', {
+  help: 'methods to update in already generated results.json file',
+  action: 'append',
+});
+parser.add_argument('--update-feature', {
   help: 'methods to update in already generated results.json file',
   action: 'append',
 });
@@ -40,18 +48,32 @@ const browsers = Object.keys(commands.start);
 let files = glob.sync(`./build/${args.mode}/*/*/*.html`).map(it => it.replace(/^\.\/build/, ''));
 let data = {};
 
-if (args.update) {
+if (args.update_method) {
   data = fse.readJsonSync(`results/${args.mode}/results.json`);
 
   Object.keys(data).forEach(feature => {
     Object.keys(data[feature]).forEach(browsers => {
-      args.update.forEach(method => {
+      args.update_method.forEach(method => {
         data[feature][browsers][method] = [];
       });
     });
   });
 
-  files = files.filter(file => args.update.some(method => file.includes(method)));
+  files = files.filter(file => args.update_method.some(method => file.includes(method)));
+}
+
+if (args.update_feature) {
+  data = fse.readJsonSync(`results/${args.mode}/results.json`);
+
+  args.update_feature.forEach(feature => {
+    Object.keys(data[feature]).forEach(browser => {
+      Object.keys(data[feature][browser]).forEach(method => {
+        data[feature][browser][method] = [];
+      });
+    });
+  });
+
+  files = files.filter(file => args.update_feature.some(method => file.includes(method)));
 }
 
 let browsersIndex = 0;
@@ -66,7 +88,7 @@ const runBrowser = () => {
   const command = commands.start[browser];
 
   clearTimeout(runBrowserTimeout);
-  exec(`${command} "http://localhost:${args.port}${file}?browser=${browser}"`);
+  exec(`${command} "http://localhost:${args.port}${file}?browser=${browser}&delay=${args.delay}"`);
 
   // Rerun test after 3 minutes if it's for some reason failed
   runBrowserTimeout = setTimeout(runBrowser, 1_000 * 60 * 3);
@@ -78,7 +100,7 @@ const makeIteration = () => {
       passes = 0;
 
       fileIndex++;
-      progress.update(fileIndex);
+      progress.update(fileIndex * maxTestPasses + passes);
       if (fileIndex === files.length) {
         progress.stop();
         browsersIndex++;
@@ -95,12 +117,14 @@ const makeIteration = () => {
       progress = new SingleBar({
         format: `${browsers[browsersIndex].padEnd(8)}[{bar}] {percentage}% | ETA: {eta}s | {value}/{total}`,
       });
-      progress.start(files.length, 0);
+      progress.start(files.length * maxTestPasses, 0);
     }
   }
 
-  passes++;
-  setTimeout(runBrowser, 250);
+  const progressIndex = fileIndex * maxTestPasses + passes++;
+  progressIndex > 0 && progress.update(progressIndex);
+
+  setTimeout(runBrowser, args.delay);
 };
 
 const app = express();

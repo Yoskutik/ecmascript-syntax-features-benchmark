@@ -9,7 +9,7 @@
 </script>
 <script>
 function fun() {
-<%= compilation.assets[htmlWebpackPlugin.options.asset + '.js'].source().repeat(1000) %>
+<%= compilation.assets[htmlWebpackPlugin.options.asset + '.js'].source().repeat(350) %>
 <%
   // Avoiding javascript files emit
   delete compilation.assets[htmlWebpackPlugin.options.asset + '.js'];

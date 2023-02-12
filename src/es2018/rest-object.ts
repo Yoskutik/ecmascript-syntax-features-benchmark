@@ -1,9 +1,6 @@
 import { run } from '../helpers';
 
-const obj = Array(500).fill(null).map((_, i) => i).reduce((acc, it) => {
-  acc['a' + it] = it;
-  return acc;
-}, {});
+let obj;
 
 run(
   10_000,
@@ -11,4 +8,10 @@ run(
     var { ...a } = obj;
     window.__testValue = a;
   },
+  function (k) {
+    obj = Array(500).fill(null).map((_, i) => i).reduce((acc, i) => {
+      acc['a' + i] = i + k;
+      return acc;
+    }, {});
+  }
 );

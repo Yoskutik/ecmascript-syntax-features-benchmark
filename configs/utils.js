@@ -13,7 +13,7 @@ const createBaseWebpackConfig = (dir, loader, options, type, entries) => ({
   output: {
     path: path.join(__dirname, `../build/${dir}`),
     filename: '[name].js',
-    clean: true,
+    clean: type === 'execution',
   },
   resolve: {
     extensions: ['.js', '.ts'],
@@ -64,6 +64,6 @@ exports.createConfigs = (type, entries) => {
 
     createConfig('swc-legacy', 'swc-loader', createSWCConfig('es5')),
 
-    createConfig('modern', 'swc-loader', createSWCConfig('es2018')),
+    createConfig('modern', 'swc-loader', createSWCConfig('es2022')),
   ];
 };

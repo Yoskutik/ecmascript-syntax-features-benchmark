@@ -1,6 +1,6 @@
 import { run } from '../helpers';
 
-const arr = Array(1000).fill(null).map((_, i) => i);
+let arr;
 
 run(
   50_000,
@@ -9,4 +9,7 @@ run(
       window.__testValue = val;
     }
   },
+  function (k) {
+    arr = Array(1000).fill(k);
+  }
 );
