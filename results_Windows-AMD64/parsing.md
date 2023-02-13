@@ -7,33 +7,18 @@ Babel, SWC and TypeScript. Also, each feature is tested in
 several popular browsers.
 ## System info: Windows, AMD64
 
-### es2015/arrow-functions-declaration
+### es2015/arrow-functions
 
-Source code: [code](../src/es2015/arrow-functions-declaration.ts)
+Source code: [code](../src/es2015/arrow-functions.ts)
 
-![Bar plot](./parsing/plots/bars/es2015/arrow-functions-declaration.png)
-
-
-<details>
-  <summary>
-    Box plot
-  </summary>
-  <img alt="Box plot" src="./parsing/plots/boxes/es2015/arrow-functions-declaration.png">
-</details>
-
-
-### es2015/arrow-functions-usage
-
-Source code: [code](../src/es2015/arrow-functions-usage.ts)
-
-![Bar plot](./parsing/plots/bars/es2015/arrow-functions-usage.png)
+![Bar plot](./parsing/plots/bars/es2015/arrow-functions.png)
 
 
 <details>
   <summary>
     Box plot
   </summary>
-  <img alt="Box plot" src="./parsing/plots/boxes/es2015/arrow-functions-usage.png">
+  <img alt="Box plot" src="./parsing/plots/boxes/es2015/arrow-functions.png">
 </details>
 
 
@@ -94,6 +79,21 @@ Source code: [code](../src/es2015/generators.ts)
     Box plot
   </summary>
   <img alt="Box plot" src="./parsing/plots/boxes/es2015/generators.png">
+</details>
+
+
+### es2015/object-literals
+
+Source code: [code](../src/es2015/object-literals.ts)
+
+![Bar plot](./parsing/plots/bars/es2015/object-literals.png)
+
+
+<details>
+  <summary>
+    Box plot
+  </summary>
+  <img alt="Box plot" src="./parsing/plots/boxes/es2015/object-literals.png">
 </details>
 
 
@@ -172,21 +172,6 @@ Source code: [code](../src/es2017/async-functions.ts)
 </details>
 
 
-### es2018/rest-object-arguments
-
-Source code: [code](../src/es2018/rest-object-arguments.ts)
-
-![Bar plot](./parsing/plots/bars/es2018/rest-object-arguments.png)
-
-
-<details>
-  <summary>
-    Box plot
-  </summary>
-  <img alt="Box plot" src="./parsing/plots/boxes/es2018/rest-object-arguments.png">
-</details>
-
-
 ### es2018/rest-object
 
 Source code: [code](../src/es2018/rest-object.ts)
@@ -202,63 +187,93 @@ Source code: [code](../src/es2018/rest-object.ts)
 </details>
 
 
-### es2018/spread-after
+### es2018/rest-object-without-some
 
-Source code: [code](../src/es2018/spread-after.ts)
+Source code: [code](../src/es2018/rest-object-without-some.ts)
 
-![Bar plot](./parsing/plots/bars/es2018/spread-after.png)
+![Bar plot](./parsing/plots/bars/es2018/rest-object-without-some.png)
 
 
 <details>
   <summary>
     Box plot
   </summary>
-  <img alt="Box plot" src="./parsing/plots/boxes/es2018/spread-after.png">
+  <img alt="Box plot" src="./parsing/plots/boxes/es2018/rest-object-without-some.png">
 </details>
 
 
-### es2018/spread-replace-many
+### es2018/spread-one-before
 
-Source code: [code](../src/es2018/spread-replace-many.ts)
+Source code: [code](../src/es2018/spread-one-before.ts)
 
-![Bar plot](./parsing/plots/bars/es2018/spread-replace-many.png)
+![Bar plot](./parsing/plots/bars/es2018/spread-one-before.png)
 
 
 <details>
   <summary>
     Box plot
   </summary>
-  <img alt="Box plot" src="./parsing/plots/boxes/es2018/spread-replace-many.png">
+  <img alt="Box plot" src="./parsing/plots/boxes/es2018/spread-one-before.png">
 </details>
 
 
-### es2018/spread-replace-number-fields
+### es2018/spread-many-before
 
-Source code: [code](../src/es2018/spread-replace-number-fields.ts)
+Source code: [code](../src/es2018/spread-many-before.ts)
 
-![Bar plot](./parsing/plots/bars/es2018/spread-replace-number-fields.png)
+![Bar plot](./parsing/plots/bars/es2018/spread-many-before.png)
 
 
 <details>
   <summary>
     Box plot
   </summary>
-  <img alt="Box plot" src="./parsing/plots/boxes/es2018/spread-replace-number-fields.png">
+  <img alt="Box plot" src="./parsing/plots/boxes/es2018/spread-many-before.png">
 </details>
 
 
-### es2018/spread-replace
+### es2018/spread-one-after
 
-Source code: [code](../src/es2018/spread-replace.ts)
+Source code: [code](../src/es2018/spread-one-after.ts)
 
-![Bar plot](./parsing/plots/bars/es2018/spread-replace.png)
+![Bar plot](./parsing/plots/bars/es2018/spread-one-after.png)
 
 
 <details>
   <summary>
     Box plot
   </summary>
-  <img alt="Box plot" src="./parsing/plots/boxes/es2018/spread-replace.png">
+  <img alt="Box plot" src="./parsing/plots/boxes/es2018/spread-one-after.png">
+</details>
+
+
+### es2018/spread-many-after
+
+Source code: [code](../src/es2018/spread-many-after.ts)
+
+![Bar plot](./parsing/plots/bars/es2018/spread-many-after.png)
+
+
+<details>
+  <summary>
+    Box plot
+  </summary>
+  <img alt="Box plot" src="./parsing/plots/boxes/es2018/spread-many-after.png">
+</details>
+
+
+### es2018/spread-number-fields
+
+Source code: [code](../src/es2018/spread-number-fields.ts)
+
+![Bar plot](./parsing/plots/bars/es2018/spread-number-fields.png)
+
+
+<details>
+  <summary>
+    Box plot
+  </summary>
+  <img alt="Box plot" src="./parsing/plots/boxes/es2018/spread-number-fields.png">
 </details>
 
 
@@ -274,6 +289,21 @@ Source code: [code](../src/es2019/private-class-variables.ts)
     Box plot
   </summary>
   <img alt="Box plot" src="./parsing/plots/boxes/es2019/private-class-variables.png">
+</details>
+
+
+### es2020/nullish-coalescing
+
+Source code: [code](../src/es2020/nullish-coalescing.ts)
+
+![Bar plot](./parsing/plots/bars/es2020/nullish-coalescing.png)
+
+
+<details>
+  <summary>
+    Box plot
+  </summary>
+  <img alt="Box plot" src="./parsing/plots/boxes/es2020/nullish-coalescing.png">
 </details>
 
 
