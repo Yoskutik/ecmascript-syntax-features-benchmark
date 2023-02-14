@@ -1,7 +1,7 @@
 import { run } from '../helpers';
 
 run(
-  1_000_000,
+  500_000,
   function (i, k) {
     window.__testValue = (
        `${i}.${i + 1}.${i + 2}.${i + 3}.${i + 4}.${i + 5

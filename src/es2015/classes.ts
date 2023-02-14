@@ -5,7 +5,7 @@ let level1Classes;
 let level2Classes;
 
 run(
-  1_000_000,
+  500_000,
   function (i) {
     var Class: any = level2Classes[i % level2Classes.length];
     new Class().method2();

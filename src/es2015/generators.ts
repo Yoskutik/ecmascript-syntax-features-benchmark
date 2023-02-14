@@ -3,7 +3,7 @@ import { run } from '../helpers';
 let myGenObj;
 
 run(
-  50_000_000,
+  10_000_000,
   function () {
     window.__testValue = myGenObj.next().value;
   },

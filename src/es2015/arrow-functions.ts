@@ -3,7 +3,7 @@ import { run } from '../helpers';
 let fns: ((n: number) => number)[];
 
 run(
-  35_000_000,
+  30_000_000,
   function (i) {
     window.__testValue = fns[i % fns.length](i);
   },

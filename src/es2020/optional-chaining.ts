@@ -3,7 +3,7 @@ import { run } from '../helpers';
 let obj: any;
 
 run(
-  50_000_000,
+  35_000_000,
   function () {
     window.__testValue = obj
       ?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a

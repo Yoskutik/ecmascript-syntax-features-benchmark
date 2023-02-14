@@ -6,6 +6,7 @@ import argparse
 import platform
 import shutil
 import glob
+import subprocess
 from tqdm import tqdm
 
 
@@ -62,8 +63,15 @@ for benchmark in sources:
       features.append(feature)
 
 
-  def create_plot(fn, figsize, folder_name, feature, values):
-    plt.figure(figsize=figsize)
+  def get_figsize(fn):
+    if fn == bar:
+      return [15, len(browsers) * 0.875 + 1.5]
+    else:
+      return [15, len(browsers) * 1.375 + 1.5]
+
+
+  def create_plot(fn, folder_name, feature, values):
+    plt.figure(figsize=get_figsize(fn))
 
     fn(values, 0.15)
 
@@ -90,21 +98,17 @@ for benchmark in sources:
 
   def bar(values, width):
     methods_order = [x[0] for x in methods]
-    barhs = []
-    barh_values = []
+    barh_values = [[values[label][i] for label in methods_order] for i in range(len(browsers))]
 
+    barhs = []
     for i, (label, color, pos) in enumerate(methods):
       barh = plt.barh(x + pos*width/2*1.25, values[label], width, color=color)
-      all_values = [values[x][i] for x in methods_order]
       barhs.append(barh)
-      barh_values.append(all_values)
 
     for i, barh in enumerate(barhs):
-      min_value = min(barh_values[i])
-      max_value = max(barh_values[i])
       plt.bar_label(
         barh,
-        labels=[f'x{barh_values[x][i] / max(barh_values[x]):.2f}' for x in range(4)],
+        labels=[f'x{barh_values[x][i] / max(barh_values[x]):.2f}' for x in range(len(browsers))],
         padding=5,
       )
 
@@ -146,20 +150,12 @@ for benchmark in sources:
   description = f'{benchmark.capitalize()}: Bar plots'
   for feature in tqdm(features, desc=description):
     values = create_values(lambda x: 1 / np.quantile(x, 0.25))
-    create_plot(bar, [15, 5], 'bars', feature, values)
-  bar_plots_number = len(glob.glob(f'./{results_dir}/{benchmark}/plots/bar/**/*.png', recursive=True))
-  if bar_plots_number > len(feature) * len(browsers):
-    print('[Warning] The number of bar plots is too big. Check if there are any extra charts in the folder.')
-
+    create_plot(bar, 'bars', feature, values)
 
   description = f'{benchmark.capitalize()}: Box plots'
   for feature in tqdm(features, desc=description):
     values = create_values(lambda x: 1 / np.array(x))
-    create_plot(box, [15, 7], 'boxes', feature, values)
-  box_plots_number = len(glob.glob(f'./{results_dir}/{benchmark}/plots/bar/**/*.png', recursive=True))
-  if box_plots_number > len(feature) * len(browsers):
-    print('[Warning] The number of box plots is too big. Check if there are any extra charts in the folder.')
-
+    create_plot(box, 'boxes', feature, values)
 
   description = f'{benchmark.capitalize()}: Browser detailed plots'
   for browser in tqdm(browsers, desc=description):

@@ -88,37 +88,27 @@ This benchmark was launched on the following environments:
 
 These results are relevant as of February 2023.
 
-The results are differ from browser to browser. Which is why we can't
-just say, in which build asynchronous functions work faster or slower.
-But we can tell which assembly generates the fastest code if it is the
-fastest in all browsers.
-
-Below you can see a table that shows which build is the fastest (**F**)
-and which is the slowest (**S**) for each of the features. If the
-feature does not have the fastest and/or the slowest build, it means
-that speed measurements vary in browsers.
-
 
 ### MacOS on ARM x64
 
-#### Execution mode 
+|                                | [E] Modern profit  | [E] Legacy   | [P] Modern is fastest | [P] Legacy         |
+|--------------------------------|--------------------|--------------|-----------------------|--------------------|
+| es2015/arrow-functions         | Become slower      | Equal        | Depends               | Equal              |
+| es2015/classes                 | Mostly the fastest | TS           | Depends               | Equal              |
+| es2015/default-parameters      | Become slower      | Depends      | Depends               | Equal              |
+| es2015/for-of-iterators        | Become slower      | TS           | The fastest           | TS                 |
+| es2015/generators              | Mostly the fastest | Babel        | Mostly the fastest    | Babel is the worst |
+| es2015/object-literals         | Depends            | TS           | The fastest           | TS                 |
+| es2015/rest-parameters         | The fastest        | Babel or SWC | Depends               | Equal              |
+| es2015/spread-operator         | The fastest        | Equal        | Mostly the fastest    | TS                 |
+| es2015/template-literals       | The fastest        | Equal        | The fastest           | Equal              |
+| es2016/exponential-operator    | No changes         | Equal        | The fastest           | Equal              |
+| es2017/async-functions         | The fastest        | Equal        | Depends               | Babel is the worst |
+| es2018/rest-objects            | Depends            | Depends      | The fastest           | TS                 |
+| es2018/spread-objects          | Depends            | Depends      | The fastest           | Babel is the worst |
+| es2019/private-class-variables | The fastest        | Depends      | Depends               | Equal              |
+| es2020/nullish-coalescing      | The fastest        | Equal        | The fastest           | Equal              |
+| es2020/optional-chaining       | Mostly the fastest | Depends      | Become faster         | TS is the worst    |
 
-|                           | Modern | TypeScript | SWC    | Babel  |
-|---------------------------|--------|------------|--------|--------|
-| es2015/arrow-functions    | **ES** |            |        |        |
-| es2015/classes            |        |            | **ES** | **ES** |
-| es2015/default-parameters | **ES** | **EF**     |        |        |
-| es2015/for-of-iterators   |        | **EF**     |        | **ES** |
-| es2015/generators         |        |            |        |        |
-| es2015/rest-parameters    | **EF** | **ES**     |        |        |
-| es2015/spread-operator    |        | **EF**     | **ES** | **ES** |
-| es2015/template-literals  | **EF** |            |        |        |
-| es2016/template-literals  | **ES** |            |        |        |
-| es2017/async-functions    | **EF** | **ES**     |        |        |
-| es2018/async-functions    | **EF** | **ES**     |        |        |
-| es2020/optional-chaining  | **EF** |            |        |        |
-
-Results for `es2015/arrow-function-declaration`, `es2015/for-of-iterators`
-and `es2018/private-class-variables` are vary.
 
 ### Windows on AMD x64

@@ -1,7 +1,7 @@
 import { run } from '../helpers';
 
 run(
-  1_000_000,
+  250_000,
   function (i, k) {
     window.__testValue = {
       ['a'.concat((i % 5000).toString())]: k + i,

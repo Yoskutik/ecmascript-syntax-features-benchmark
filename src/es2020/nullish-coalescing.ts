@@ -1,7 +1,7 @@
 import { run } from '../helpers';
 
 run(
-  50_000_000,
+  25_000_000,
   function () {
     var tv = window.__testValue;
     window.__testValue = tv

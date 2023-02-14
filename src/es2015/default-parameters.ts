@@ -3,7 +3,7 @@ import { run } from '../helpers';
 let fns;
 
 run(
-  20_000_000,
+  10_000_000,
   function (i) {
     fns[i % fns.length]();
   },

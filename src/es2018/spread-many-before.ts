@@ -4,7 +4,7 @@ let obj;
 let obj2;
 
 run(
-  5_000,
+  100,
   function (i, k) {
     window.__testValue = {
       a0: k,
@@ -15,7 +15,7 @@ run(
     };
   },
   function (k) {
-    obj = Array(500).fill(null).map((_, i) => i).reduce((acc, it) => {
+    obj = Array(7_500).fill(null).map((_, i) => i).reduce((acc, it) => {
       acc['a' + it] = it;
       return acc;
     }, {});

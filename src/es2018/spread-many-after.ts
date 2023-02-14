@@ -4,18 +4,18 @@ let obj;
 let obj2;
 
 run(
-  10_000,
+  100,
   function (i, k) {
     window.__testValue = {
       ...obj,
       ...obj2,
       a0: k,
-      a250: k + i,
-      a499: k + i + 10,
+      a1500: k + i,
+      a3749: k + i + 10,
     };
   },
   function (k) {
-    obj = Array(500).fill(null).map((_, i) => i).reduce((acc, i) => {
+    obj = Array(7_500).fill(null).map((_, i) => i).reduce((acc, i) => {
       acc['a' + i] = i + k;
       return acc;
     }, {});

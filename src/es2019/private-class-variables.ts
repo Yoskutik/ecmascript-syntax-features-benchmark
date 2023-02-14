@@ -3,7 +3,7 @@ import { run } from '../helpers';
 let classes;
 
 run(
-  1_000_000,
+  500_000,
   function (i) {
     new classes[i % classes.length]();
   },

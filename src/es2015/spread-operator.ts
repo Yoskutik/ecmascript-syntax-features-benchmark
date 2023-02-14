@@ -7,7 +7,7 @@ let args: [
 let fns;
 
 run(
-  5_000_000,
+  2_500_000,
   function (i) {
     fns[i % fns.length](i, ...args[i % args.length]);
   },
