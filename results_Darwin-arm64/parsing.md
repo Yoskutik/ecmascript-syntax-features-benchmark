@@ -322,3 +322,48 @@ Source code: [code](../src/es2020/optional-chaining.ts)
 </details>
 
 
+### es2021/logical-operators-idle
+
+Source code: [code](../src/es2021/logical-operators-idle.ts)
+
+![Bar plot](./parsing/plots/bars/es2021/logical-operators-idle.png)
+
+
+<details>
+  <summary>
+    Box plot
+  </summary>
+  <img alt="Box plot" src="./parsing/plots/boxes/es2021/logical-operators-idle.png">
+</details>
+
+
+### es2021/logical-operators
+
+Source code: [code](../src/es2021/logical-operators.ts)
+
+![Bar plot](./parsing/plots/bars/es2021/logical-operators.png)
+
+
+<details>
+  <summary>
+    Box plot
+  </summary>
+  <img alt="Box plot" src="./parsing/plots/boxes/es2021/logical-operators.png">
+</details>
+
+
+### es2022/private-class-methods
+
+Source code: [code](../src/es2022/private-class-methods.ts)
+
+![Bar plot](./parsing/plots/bars/es2022/private-class-methods.png)
+
+
+<details>
+  <summary>
+    Box plot
+  </summary>
+  <img alt="Box plot" src="./parsing/plots/boxes/es2022/private-class-methods.png">
+</details>
+
+

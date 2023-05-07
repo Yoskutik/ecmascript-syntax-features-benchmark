@@ -1,21 +1,24 @@
 import { run } from '../helpers';
 
-let obj;
+const obj = Array(7_500).fill(null)
+  .map((_, i) => i)
+  .reduce((acc, it) => {
+    acc['a' + it] = it;
+    return acc;
+  }, {});
 
 run(
-  100,
-  function (i, k) {
+  250,
+  function (i) {
     window.__testValue = {
       ...obj,
-      a0: k,
-      a3500: k + i,
-      a7499: k + i + 10,
+      a0: i,
+      a100: i + 100,
+      a250: i + 250,
+      a500: i + 500,
+      a2000: i + 2000,
+      a10000: i + 10_000,
+      a20000: i + 20_000,
     };
   },
-  function (k) {
-    obj = Array(7_500).fill(null).map((_, i) => i).reduce((acc, it) => {
-      acc['a' + it] = it;
-      return acc;
-    }, {});
-  }
 );

@@ -1,0 +1,33 @@
+{
+  "darwin": {
+    "prepare": {
+      "Safari": "osascript -e 'tell application \"Safari\" to activate' -e 'delay 0.2' -e 'tell application \"System Events\" to keystroke \"n\" using {command down, shift down}'",
+      "Firefox": "open -na \"Firefox\" --args -private-window",
+      "Chrome": "open -na \"Google Chrome\" --args --incognito",
+      "Opera": "open -na \"Opera\" --args --incognito"
+    },
+    "start": {
+      "Safari": "osascript -e 'tell application \"Safari\" to activate' -e 'delay 0.2'  -e 'tell application \"System Events\" to keystroke \"t\" using {command down}' -e 'delay 0.2' -e 'tell application \"Safari\" to set URL of current tab of front window to \"{{URL}}\"'",
+      "Firefox": "open -na \"Firefox\" --args -private-window \"{{URL}}\"",
+      "Chrome": "open -na \"Google Chrome\" --args --incognito \"{{URL}}\"",
+      "Opera": "open -na \"Opera\" --args --incognito \"{{URL}}\""
+    },
+    "closeTab": {
+      "Safari": "osascript -e 'tell application \"Safari\" to activate' -e 'tell application \"System Events\" to keystroke \"w\" using {command down}'"
+    },
+    "kill": {
+      "Safari": "osascript -e 'tell application \"Safari\" to quit'",
+      "Firefox": "osascript -e 'tell application \"Firefox\" to quit'",
+      "Chrome": "osascript -e 'tell application \"Chrome\" to quit'",
+      "Opera": "osascript -e 'tell application \"Opera\" to quit'"
+    }
+  },
+  "win32": {
+    "start": {
+      "Edge": "cmd.exe /c start shell:AppsFolder\\Microsoft.MicrosoftEdge_8wekyb3d8bbwe!MicrosoftEdge -private",
+      "Firefox": "\"C:\\Program Files\\Mozilla Firefox\\firefox.exe\" -private-window",
+      "Chrome": "\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" --incognito",
+      "Opera": "\"C:\\Users\\yosku\\AppData\\Local\\Programs\\Opera\\launcher.exe\" --incognito"
+    }
+  }
+}

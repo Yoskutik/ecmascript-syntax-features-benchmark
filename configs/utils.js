@@ -7,7 +7,7 @@ const createSWCConfig = (target) => ({
   jsc: { target, externalHelpers: true },
 });
 
-const createBaseWebpackConfig = (dir, loader, options, type, entries) => ({
+const createBaseWebpackConfig = (dir, loader, options, type, entries, isMobile) => ({
   mode: 'production',
   entry: entries,
   output: {
@@ -24,6 +24,7 @@ const createBaseWebpackConfig = (dir, loader, options, type, entries) => ({
   plugins: [
     new DefinePlugin({
       BUILD_TYPE: JSON.stringify(type),
+      IS_FOR_MOBILE: JSON.stringify(isMobile),
     }),
     ...Object.keys(entries).map(key => (
       new HtmlPlugin({
@@ -36,9 +37,9 @@ const createBaseWebpackConfig = (dir, loader, options, type, entries) => ({
   ],
 });
 
-exports.createConfigs = (type, entries) => {
+exports.createConfigs = (type, entries, isMobile) => {
   const createConfig = (dir, loader, options) => (
-    createBaseWebpackConfig(`${type}/${dir}`, loader, options, type, entries)
+    createBaseWebpackConfig(`${type}/${dir}`, loader, options, type, entries, isMobile)
   );
 
   return [

@@ -1,17 +1,15 @@
 import { run } from '../helpers';
 
-let myGenObj;
+function* fn() {
+  var i = 0;
+  while (true) yield i++;
+}
+
+const genObj = fn();
 
 run(
   10_000_000,
   function () {
-    window.__testValue = myGenObj.next().value;
+    window.__testValue = genObj.next().value;
   },
-  function (k) {
-    function* fun(i) {
-      while (true) yield i;
-    }
-
-    myGenObj = fun(k);
-  }
 );

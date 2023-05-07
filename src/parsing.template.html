@@ -9,7 +9,7 @@
 </script>
 <script>
 function fun() {
-<%= compilation.assets[htmlWebpackPlugin.options.asset + '.js'].source().repeat(350) %>
+<%= compilation.assets[htmlWebpackPlugin.options.asset + '.js'].source().repeat(250) %>
 <%
   // Avoiding javascript files emit
   delete compilation.assets[htmlWebpackPlugin.options.asset + '.js'];
@@ -26,6 +26,7 @@ function fun() {
             'Content-Type': 'application/json;charset=UTF-8',
         },
         body: JSON.stringify({
+            sessionId: new URL(location.href).searchParams.get('sessionId'),
             browser: new URL(location.href).searchParams.get('browser'),
             method,
             feature,

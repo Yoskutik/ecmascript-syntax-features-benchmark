@@ -1,28 +1,30 @@
 import { run } from '../helpers';
 
-let obj;
-let obj2;
+const obj = Array(7_500).fill(null)
+  .map((_, i) => i)
+  .reduce((acc, it) => {
+    acc['a' + it] = it;
+    return acc;
+  }, {});
+
+const obj2 = { ...obj };
+Object.keys(obj2).forEach(key => {
+  obj2[key] += 10;
+});
 
 run(
-  100,
-  function (i, k) {
+  125,
+  function (i) {
     window.__testValue = {
-      a0: k,
-      a250: k + i,
-      a499: k + i + 10,
+      a0: i,
+      a100: i + 100,
+      a250: i + 250,
+      a500: i + 500,
+      a2000: i + 2000,
+      a10000: i + 10_000,
+      a20000: i + 20_000,
       ...obj,
       ...obj2,
     };
-  },
-  function (k) {
-    obj = Array(7_500).fill(null).map((_, i) => i).reduce((acc, it) => {
-      acc['a' + it] = it;
-      return acc;
-    }, {});
-
-    obj2 = { ...obj };
-    Object.keys(obj2).forEach(key => {
-      obj2[key] += 10;
-    });
   },
 );

@@ -2,14 +2,14 @@ import { run } from '../helpers';
 
 run(
   250_000,
-  function (i, k) {
+  function (i) {
     window.__testValue = {
-      ['a'.concat((i % 5000).toString())]: k + i,
-      ['a'.concat(((i + 100) % 5000).toString())]: k + i + 1,
-      ['a'.concat(((i + 200) % 5000).toString())]: k + i + 2,
-      ['a'.concat(((i + 300) % 5000).toString())]: k + i + 3,
-      ['a'.concat(((i + 400) % 5000).toString())]: k + i + 4,
-      ['a'.concat(((i + 500) % 5000).toString())]: k + i + 5,
+      ['a' + (i % 5000)]: i,
+      ['a' + ((i + 100) % 5000)]: i + 1,
+      ['a' + ((i + 200) % 5000)]: i + 2,
+      ['a' + ((i + 300) % 5000)]: i + 3,
+      ['a' + ((i + 400) % 5000)]: i + 4,
+      ['a' + ((i + 500) % 5000)]: i + 5,
     }
   },
-)
+);

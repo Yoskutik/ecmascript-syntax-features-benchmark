@@ -19,7 +19,7 @@ if args.mode == 'both':
 else:
   sources = [args.mode]
 
-with open(f'commands.json') as f:
+with open(f'./server/commands.json') as f:
   system = 'darwin' if platform.uname().system == 'Darwin' else 'win32'
   browsers = list(json.load(f)[system]['start'].keys())
 
@@ -79,7 +79,7 @@ for benchmark in sources:
     plt.yticks(x, browsers, fontsize=12)
     plt.xticks([])
     plt.xlabel(
-      'Frequency of operations per second' if benchmark == 'execution' else 'JavaScript parsing speed',
+      'Number of operations per second' if benchmark == 'execution' else 'JavaScript parsing speed',
       fontsize=12
     )
 
@@ -180,7 +180,8 @@ for benchmark in sources:
         plt.subplot(n_rows, 3, current_plot + 1)
         plt.title(feature)
         for label, values in data[feature][browser].items():
-          plt.plot(values, label=label)
+          item = list(filter(lambda x: label == x[0].lower().replace(' ', '-'), methods))[0]
+          plt.plot(1 / np.array(values), label=label, c=item[1])
         plt.xticks([])
         plt.yticks([])
         current_plot += 1

@@ -1,6 +1,6 @@
 import { run } from '../helpers';
 
-let arr;
+const arr = Array(1000).fill(0);
 
 run(
   50_000,
@@ -9,7 +9,4 @@ run(
       window.__testValue = val;
     }
   },
-  function (k) {
-    arr = Array(1000).fill(k);
-  }
 );
