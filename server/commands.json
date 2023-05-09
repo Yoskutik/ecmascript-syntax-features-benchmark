@@ -23,11 +23,23 @@
     }
   },
   "win32": {
-    "start": {
+    "prepare": {
       "Edge": "cmd.exe /c start shell:AppsFolder\\Microsoft.MicrosoftEdge_8wekyb3d8bbwe!MicrosoftEdge -private",
-      "Firefox": "\"C:\\Program Files\\Mozilla Firefox\\firefox.exe\" -private-window",
+      "Firefox": "\"C:\\Program Files\\Mozilla Firefox\\firefox.exe\" -private",
       "Chrome": "\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" --incognito",
       "Opera": "\"C:\\Users\\yosku\\AppData\\Local\\Programs\\Opera\\launcher.exe\" --incognito"
+    },
+    "start": {
+      "Edge": "cmd.exe /c start shell:AppsFolder\\Microsoft.MicrosoftEdge_8wekyb3d8bbwe!MicrosoftEdge -private \"{{URL}}\"",
+      "Firefox": "\"C:\\Program Files\\Mozilla Firefox\\firefox.exe\" -private-window \"{{URL}}\"",
+      "Chrome": "\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" --incognito \"{{URL}}\"",
+      "Opera": "\"C:\\Users\\yosku\\AppData\\Local\\Programs\\Opera\\launcher.exe\" --incognito \"{{URL}}\""
+    },
+    "kill": {
+      "Edge": "taskkill /im msedge.exe /f /t",
+      "Firefox": "taskkill /im firefox.exe /f /t",
+      "Chrome": "taskkill /im chrome.exe /f /t",
+      "Opera": "taskkill /im opera.exe /f /t"
     }
   }
 }
