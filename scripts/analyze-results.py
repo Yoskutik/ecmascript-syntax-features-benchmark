@@ -30,10 +30,10 @@ shutil.copytree('results', results_dir, dirs_exist_ok=True)
 x = np.flip(np.arange(len(browsers)))
 
 methods = [
-  ['Modern', '#d3242b', 3],
+  ['Modern', '#2ca42c', 3],
   ['TypeScript Legacy', '#1c74b3', 1],
   ['Babel Legacy', '#fa7c0d', -1],
-  ['SWC Legacy', '#2ca42c', -3],
+  ['SWC Legacy', '#f6cb4c', -3],
 ]
 
 es2018_order = [
