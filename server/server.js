@@ -1,15 +1,15 @@
 const express = require('express');
 const fse = require('fs-extra');
 const glob = require('glob');
-const { execSync } = require('child_process');
-const { SingleBar } = require('cli-progress');
+const {execSync, exec} = require('child_process');
+const {SingleBar} = require('cli-progress');
 const webdriver = require('webdriverio');
 const os = require('os');
 
 const androidBrowsersCapabilities = require('./androidBrowserCapabilities');
 const commands = require('./commands.json')[process.platform];
-const { args } = require('./arguments');
-const { logger } = require('./logger');
+const {args} = require('./arguments');
+const {logger} = require('./logger');
 
 const ip = Object.values(os.networkInterfaces())
   .flat()
@@ -92,6 +92,7 @@ const runBrowser = async () => {
     }
   } else {
     execSync(command.replace('{{URL}}', url));
+    logger.info(command.replace('{{URL}}', url));
   }
 
   // Rerun test after 1.5 minutes if it's for some reason failed
@@ -130,7 +131,7 @@ const makeIteration = async () => {
         execSync(commands.kill[browsers[browsersIndex]]);
         logger.info(`Current browser ${browsers[browsersIndex]} was killed`);
       } catch (e) {}
-      execSync(commands.prepare[browsers[browsersIndex]]);
+      exec(commands.prepare[browsers[browsersIndex]]);
       logger.info(`Current browser ${browsers[browsersIndex]} was prepared`);
     }
   }
@@ -147,7 +148,7 @@ app.use(express.json());
 app.use(express.static('build'));
 
 app.post(`/${args.mode}`, async (req, res) => {
-  const { browser, feature, method, results, duration, sessionId: reqSessionId } = req.body;
+  const {browser, feature, method, results, duration, sessionId: reqSessionId} = req.body;
 
   if (sessionId !== reqSessionId) {
     res.status(400);
